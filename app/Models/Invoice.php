@@ -16,6 +16,10 @@ class Invoice extends Model
         'due_date',
     ];
 
+    protected $casts = [
+        'due_date' => 'date',
+    ];
+
     public function subscription(): BelongsTo
     {
         return $this->belongsTo(Subscription::class);

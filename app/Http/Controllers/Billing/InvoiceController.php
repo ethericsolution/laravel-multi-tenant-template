@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Billing;
 
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
-use App\Models\Subscription;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -16,57 +16,20 @@ class InvoiceController extends Controller
         return view('billing.invoices.index', compact('invoices'));
     }
 
-    public function create()
+    public function show(Invoice $invoice)
     {
-        $invoice = new Invoice();
-        $subscriptions = Subscription::orderBy('name')->get();
+        $invoice->load('subscription', 'payments');
 
-        return view('billing.invoices.form', compact('invoice', 'subscriptions'));
+        return view('billing.invoices.show', compact('invoice'));
     }
 
-    public function store(Request $request)
+    public function download(Invoice $invoice)
     {
-        $validated = $request->validate([
-            'subscription_id' => ['nullable', 'exists:subscriptions,id'],
-            'amount' => ['required', 'numeric'],
-            'due_date' => ['nullable', 'date'],
-            'status' => ['nullable', 'string'],
-        ]);
+        $invoice->load('subscription', 'payments');
 
-        $validated['number'] = 'INV-' . time();
+        $pdf = Pdf::loadView('billing.invoices.pdf', compact('invoice'))
+            ->setPaper('a4', 'portrait');
 
-        Invoice::create($validated);
-
-        return to_route('billing.invoices.index')
-            ->with('success', 'Invoice created successfully.');
-    }
-
-    public function edit(Invoice $invoice)
-    {
-        $subscriptions = Subscription::orderBy('name')->get();
-
-        return view('billing.invoices.form', compact('invoice', 'subscriptions'));
-    }
-
-    public function update(Request $request, Invoice $invoice)
-    {
-        $validated = $request->validate([
-            'subscription_id' => ['nullable', 'exists:subscriptions,id'],
-            'amount' => ['required', 'numeric'],
-            'due_date' => ['nullable', 'date'],
-            'status' => ['nullable', 'string'],
-        ]);
-
-        $invoice->update($validated);
-
-        return to_route('billing.invoices.index')
-            ->with('success', 'Invoice updated successfully.');
-    }
-
-    public function destroy(Invoice $invoice)
-    {
-        $invoice->delete();
-
-        return back()->with('success', 'Invoice deleted successfully.');
+        return $pdf->download($invoice->number . '.pdf');
     }
 }

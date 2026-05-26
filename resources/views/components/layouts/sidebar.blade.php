@@ -6,6 +6,12 @@
             'active' => request()->routeIs('dashboard'),
             'icon' => '<span class="icon-[tabler--layout-dashboard] size-4.5"></span>',
         ],
+        [
+            'name' => __('Invoices'),
+            'route' => route('billing.invoices.index'),
+            'active' => request()->routeIs('billing.invoices.*'),
+            'icon' => '<span class="icon-[tabler--file] size-4.5"></span>',
+        ],
     ];
 @endphp
 

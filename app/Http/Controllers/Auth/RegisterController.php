@@ -3,9 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Invoice;
-use App\Models\Payment;
-use App\Models\Subscription;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -20,9 +17,7 @@ class RegisterController extends Controller
      */
     public function showRegisterForm()
     {
-        $subscriptions = Subscription::orderBy('price')->get();
-
-        return view('auth.register', compact('subscriptions'));
+        return view('auth.register');
     }
 
     /**
@@ -34,7 +29,6 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'subscription_id' => ['required', 'exists:subscriptions,id'],
         ]);
 
         $user = User::create([
@@ -61,26 +55,8 @@ class RegisterController extends Controller
             'domain' => $domainName . '.' . config('app.domain'),
         ]);
 
-        $subscription = Subscription::findOrFail($validated['subscription_id']);
-
-        $invoice = Invoice::create([
-            'subscription_id' => $subscription->id,
-            'number' => 'INV-' . strtoupper(str()->random(8)),
-            'amount' => $subscription->price,
-            'status' => 'paid',
-            'due_date' => now()->toDateString(),
-        ]);
-
-        Payment::create([
-            'invoice_id' => $invoice->id,
-            'amount' => $invoice->amount,
-            'method' => 'manual',
-            'status' => 'completed',
-            'paid_at' => now(),
-        ]);
-
         Auth::login($user);
 
-        return redirect('/dashboard');
+        return redirect()->route('subscription.select');
     }
 }

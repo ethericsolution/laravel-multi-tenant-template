@@ -12,9 +12,6 @@
         <!-- Email Address -->
         <x-form.input label="Email Address" name="email" type="email" required autocomplete="username" />
 
-        <!-- Subscription -->
-        <x-form.select label="Subscription" name="subscription_id" :options="$subscriptions->pluck('name', 'id')" required />
-
         <!-- Password -->
         <x-form.password label="Password" name="password" required />
 

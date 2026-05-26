@@ -9,7 +9,7 @@
 
     <x-slot name="header">
         <div class="p-4 space-y-6">
-            <x-common.breadcrumb :links=$breadcrumbLinks :title="__('Invoices')" :addNewAction="route('billing.invoices.create')" />
+            <x-common.breadcrumb :links=$breadcrumbLinks :title="__('Invoices')" />
         </div>
     </x-slot>
 
@@ -31,10 +31,10 @@
                     <td>{{ number_format($invoice->amount, 2) }}</td>
                     <td>{{ $invoice->status }}</td>
                     <td class="text-end pe-4">
-                        <a href="{{ route('billing.invoices.edit', $invoice) }}"
-                            class="btn btn-xs btn-outline btn-primary">{{ __('Edit') }}</a>
-                        <button type="button" class="btn btn-xs btn-outline btn-error"
-                            onclick="document.getElementById('deleteResourceForm').action = '{{ route('billing.invoices.destroy', $invoice) }}';">{{ __('Delete') }}</button>
+                        <a href="{{ route('billing.invoices.show', $invoice) }}"
+                            class="btn btn-xs btn-outline btn-secondary">{{ __('View') }}</a>
+                        <a href="{{ route('billing.invoices.pdf', $invoice) }}"
+                            class="btn btn-xs btn-outline btn-primary">{{ __('PDF') }}</a>
                     </td>
                 </tr>
             @empty
