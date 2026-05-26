@@ -39,13 +39,16 @@ class RegisterController extends Controller
 
         event(new Registered($user));
 
-        $password = $validated['password'];
-        $validated['registration_password'] = $password; // Add the password to the validated data
+        // create tenant owned by this user; use user's name for tenant name
+        $tenantData = collect($validated)->except(['password'])->toArray();
+        $tenantData['name'] = $tenantData['name'] ?? $user->name;
 
-        // except password
-        $tenant = Tenant::create(collect($validated)->except('password')->toArray());
+        // registration password 
+        $tenantData['registration_password'] = $validated['password'];
 
-        // random string of 6 characters
+        $tenant = $user->tenants()->create($tenantData);
+
+        // random string of 6 characters for domain subdomain
         $domainName = str()->random(6);
 
         $tenant->domains()->create([
