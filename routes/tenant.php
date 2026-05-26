@@ -3,6 +3,9 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\App\UserController;
+use App\Http\Controllers\App\Billing\SubscriptionController;
+use App\Http\Controllers\App\Billing\InvoiceController;
+use App\Http\Controllers\App\Billing\PaymentController;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -37,6 +40,10 @@ Route::middleware([
 
         Route::prefix('/manage')->group(function () {
             Route::resource('/users', UserController::class)->except('show');
+            // Billing resources (manual creation for tenants)
+            Route::resource('/billing/subscriptions', SubscriptionController::class)->except('show');
+            Route::resource('/billing/invoices', InvoiceController::class)->except('show');
+            Route::resource('/billing/payments', PaymentController::class)->except('show');
         });
     });
 });

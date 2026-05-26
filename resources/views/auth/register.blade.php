@@ -3,7 +3,7 @@
     <x-slot name="heading">Adventure starts here 🚀</x-slot>
     <x-slot name="subheading">Make your app management easy and fun!</x-slot>
 
-    <form class="mb-4 space-y-4" method="POST" action="{{ route('register') }}">
+    <form class="mb-4 space-y-4" method="POST" action="{{ route('register.store') }}">
         @csrf
 
         <!-- {{ __('app.name') }} -->
@@ -11,6 +11,9 @@
 
         <!-- Email Address -->
         <x-form.input label="Email Address" name="email" type="email" required autocomplete="username" />
+
+        <!-- Subscription -->
+        <x-form.select label="Subscription" name="subscription_id" :options="$subscriptions->pluck('name', 'id')" required />
 
         <!-- Password -->
         <x-form.password label="Password" name="password" required />

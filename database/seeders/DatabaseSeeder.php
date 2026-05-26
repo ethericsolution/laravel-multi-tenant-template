@@ -21,5 +21,9 @@ class DatabaseSeeder extends Seeder
             'name' => 'Super Admin',
             'email' => 'admin@example.com',
         ]);
+
+        $this->call([
+            SubscriptionSeeder::class,
+        ]);
     }
 }
