@@ -18,6 +18,7 @@ return new class extends Migration {
 
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tenant_id')->constrained('tenants')->cascadeOnDelete();
             $table->foreignId('subscription_id')->nullable()->constrained('subscriptions')->nullOnDelete();
             $table->string('number')->unique();
             $table->decimal('amount', 10, 2);

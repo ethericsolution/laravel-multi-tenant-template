@@ -36,7 +36,7 @@
 </head>
 
 <body>
-    <div class="bg-base-200 flex min-h-screen flex-col">
+    <div class="bg-base-100 flex min-h-screen flex-col">
         <x-layouts.header />
         <x-layouts.sidebar />
 
@@ -51,6 +51,8 @@
             <!-- ---------- END MAIN CONTENT ---------- -->
         </div>
     </div>
+
+    <x-common.delete-modal />
 
     @stack('scripts')
 

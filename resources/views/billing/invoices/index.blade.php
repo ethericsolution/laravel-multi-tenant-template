@@ -16,11 +16,27 @@
     <table class="table border-y border-base-content/20">
         <thead>
             <tr>
-                <th class="ps-4">Number</th>
-                <th>Subscription</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th class="text-end pe-4">Actions</th>
+                <th class="ps-4">
+                    <x-tables.sortable-header field="number" :current-sort="request('sort')">
+                        {{ __('Invoice #') }}
+                    </x-tables.sortable-header>
+                </th>
+                <th>
+                    <x-tables.sortable-header field="subscription_id" :current-sort="request('sort')">
+                        {{ __('Subscription') }}
+                    </x-tables.sortable-header>
+                </th>
+                <th>
+                    <x-tables.sortable-header field="amount" :current-sort="request('sort')">
+                        {{ __('Amount') }}
+                    </x-tables.sortable-header>
+                </th>
+                <th>
+                    <x-tables.sortable-header field="status" :current-sort="request('sort')">
+                        {{ __('Status') }}
+                    </x-tables.sortable-header>
+                </th>
+                <th class="text-end pe-4 sr-only">Actions</th>
             </tr>
         </thead>
         <tbody>

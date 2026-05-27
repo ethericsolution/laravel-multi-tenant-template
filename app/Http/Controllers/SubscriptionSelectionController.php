@@ -18,13 +18,35 @@ class SubscriptionSelectionController extends Controller
 
     public function store(Request $request)
     {
+
         $validated = $request->validate([
             'subscription_id' => ['required', 'exists:subscriptions,id'],
         ]);
 
+        // create tenant owned by this user; use user's name for tenant name
+        $user = auth()->user();
+        $tenantData = collect($validated)->except(['password'])->toArray();
+        $tenantData['name'] = $tenantData['name'] ?? $user->name;
+        $tenantData['email'] = $tenantData['email'] ?? $user->email;
+
+        // random string of 6 characters for domain subdomain
+        $domainName = str()->random(6);
+        $password = str()->random(8);
+
+        // registration password 
+        $tenantData['registration_password'] = $password;
+
+        $tenant = $user->tenants()->create($tenantData);
+
+        $tenant->domains()->create([
+            'domain' => $domainName . '.' . config('app.domain'),
+        ]);
+
+
         $subscription = Subscription::findOrFail($validated['subscription_id']);
 
         $invoice = Invoice::create([
+            'tenant_id' => $tenant->id,
             'subscription_id' => $subscription->id,
             'number' => 'INV-' . strtoupper(str()->random(8)),
             'amount' => $subscription->price,

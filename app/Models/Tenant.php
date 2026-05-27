@@ -7,6 +7,7 @@ use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Tenant extends BaseTenant implements TenantWithDatabase
 {
@@ -41,6 +42,11 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
     }
 
     protected static function booted(): void

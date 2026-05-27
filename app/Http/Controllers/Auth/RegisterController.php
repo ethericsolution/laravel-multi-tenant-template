@@ -39,22 +39,6 @@ class RegisterController extends Controller
 
         event(new Registered($user));
 
-        // create tenant owned by this user; use user's name for tenant name
-        $tenantData = collect($validated)->except(['password'])->toArray();
-        $tenantData['name'] = $tenantData['name'] ?? $user->name;
-
-        // registration password 
-        $tenantData['registration_password'] = $validated['password'];
-
-        $tenant = $user->tenants()->create($tenantData);
-
-        // random string of 6 characters for domain subdomain
-        $domainName = str()->random(6);
-
-        $tenant->domains()->create([
-            'domain' => $domainName . '.' . config('app.domain'),
-        ]);
-
         Auth::login($user);
 
         return redirect()->route('subscription.select');

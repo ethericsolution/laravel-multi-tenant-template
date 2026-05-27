@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Invoice extends Model
 {
     protected $fillable = [
+        'tenant_id',
         'subscription_id',
         'number',
         'amount',
@@ -18,7 +19,13 @@ class Invoice extends Model
 
     protected $casts = [
         'due_date' => 'date',
+        'amount' => 'decimal:2',
     ];
+
+    public function tenant(): BelongsTo
+    {
+        return $this->belongsTo(Tenant::class);
+    }
 
     public function subscription(): BelongsTo
     {
